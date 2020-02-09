@@ -17,7 +17,7 @@ keepTemp: false
 local: false
 maxJobs: 5
 onlySSL: false
-outdir: /Users/ferrari/first_python_package/relacs/tests/test_data/
+outdir: tests/test_data/
 pairedEnd: true
 pipeline: chip-seq
 plotFormat: png

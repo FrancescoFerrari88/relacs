@@ -21,8 +21,8 @@ class testInitRelacs(unittest.TestCase):
         self.assertEqual(self.relObj_custom.experiment_name, "test_relacs_custom")
         self.assertEqual(self.relObj_snakepipes.experiment_name, "test_relacs_snakepipes")
         # test base_dir attribute
-        self.assertEqual(self.relObj_custom.base_dir, "/Users/ferrari/first_python_package/relacs/tests/test_data/filtered_bam")
-        self.assertEqual(self.relObj_snakepipes.base_dir, "/Users/ferrari/first_python_package/relacs/tests/test_data/")
+        self.assertEqual(self.relObj_custom.base_dir, "tests/test_data/filtered_bam")
+        self.assertEqual(self.relObj_snakepipes.base_dir, "tests/test_data/")
 
 
 

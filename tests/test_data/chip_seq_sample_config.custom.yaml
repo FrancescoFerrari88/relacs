@@ -18,4 +18,4 @@ chip_dict:
     broad: false
     control: AD_52_manual_Input.filtered
 base_dir:
-  /Users/ferrari/first_python_package/relacs/tests/test_data/filtered_bam
+  tests/test_data/filtered_bam
