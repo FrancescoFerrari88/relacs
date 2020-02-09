@@ -1,0 +1,19 @@
+chip_dict:
+  AD_51_manual_H3K27ac:
+    broad: false
+    control: AD_51_manual_Input
+  AD_51_manual_H3K27me3:
+    broad: true
+    control: AD_51_manual_Input
+  AD_51_manual_H3K4me3:
+    broad: false
+    control: AD_51_manual_Input
+  AD_52_manual_H3K27ac:
+    broad: false
+    control: AD_52_manual_Input
+  AD_52_manual_H3K27me3:
+    broad: true
+    control: AD_52_manual_Input
+  AD_52_manual_H3K4me3:
+    broad: false
+    control: AD_52_manual_Input

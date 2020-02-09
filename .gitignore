@@ -1,3 +1,9 @@
+# data test folders
+tests/test_data/big_files/
+
+# helper notebook
+helper_notebook.ipynb
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -1,0 +1,21 @@
+chip_dict:
+  AD_51_manual_H3K27ac.filtered:
+    broad: false
+    control: AD_51_manual_Input.filtered
+  AD_51_manual_H3K27me3.filtered:
+    broad: true
+    control: AD_51_manual_Input.filtered
+  AD_51_manual_H3K4me3.filtered:
+    broad: false
+    control: AD_51_manual_Input.filtered
+  AD_52_manual_H3K27ac.filtered:
+    broad: false
+    control: AD_52_manual_Input.filtered
+  AD_52_manual_H3K27me3.filtered:
+    broad: true
+    control: AD_52_manual_Input.filtered
+  AD_52_manual_H3K4me3.filtered:
+    broad: false
+    control: AD_52_manual_Input.filtered
+base_dir:
+  /Users/ferrari/first_python_package/relacs/tests/test_data/filtered_bam
