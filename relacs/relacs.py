@@ -21,6 +21,7 @@ mapping to the bed regions.
 
 import os
 import yaml
+import pandas as pd
 import logging
 import pysam
 import deeptools.countReadsPerBin as crpb
@@ -92,6 +93,22 @@ def _check_paths(extended_config_dict):
         raise Exception("Some indexes are not present: {}".format(["{}.bai".format(file_list[i]) \
                 for i, val in enumerate(check_presence_indices) if not val]))
 
+
+def _get_bed_coords(bedfile):
+    if bedfile:
+        bed_coords = []
+        try:
+            with open(bedfile,'r') as bed:
+                for line in bed:
+                    lista = line.strip().split("\t")
+                    coord = "_".join([lista[0],str(int(lista[1])), str(int(lista[2]))])
+                    bed_coords.append(coord)
+            return bed_coords
+        except Exception as exep:
+            logging.error("An Exception occured while trying processing bed file: {}".format(exep))
+    else:
+        return None
+
 def _check_format_yaml():
     # TODO: check that config_yml provided is in in the correct format
     pass
@@ -129,6 +146,7 @@ class makeRelacsObject:
         retrieve coverage for each regions specified in bed file using deeptools' CountReadsPerBin.
         """
         bamFilesList = _get_all_bams(self.extended_yml)
+        out_file_for_raw_data_tmp = kwargs['out_file_for_raw_data'] if 'out_file_for_raw_data' in kwargs else "tmp_counts.count"
 
         cr = crpb.CountReadsPerBin(bamFilesList,
                  binLength=kwargs['binLength'] if 'binLength' in kwargs else 50,
@@ -152,24 +170,23 @@ class makeRelacsObject:
                  smoothLength=kwargs['smoothLength'] if 'smoothLength' in kwargs else 0,
                  minFragmentLength=kwargs['minFragmentLength'] if 'minFragmentLength' in kwargs else 0,
                  maxFragmentLength=kwargs['maxFragmentLength'] if 'maxFragmentLength' in kwargs else 0,
-                 out_file_for_raw_data=kwargs['out_file_for_raw_data'] if 'out_file_for_raw_data' in kwargs else None,
+                 out_file_for_raw_data=out_file_for_raw_data_tmp,
                  bed_and_bin=kwargs['bed_and_bin'] if 'bed_and_bin' in kwargs else False,
                  statsList=kwargs['statsList'] if 'statsList' in kwargs else [],
                  mappedList=kwargs['mappedList'] if 'mappedList' in kwargs else [])
 
         sequencing_depth = cr.run()
-        print(sequencing_depth.mean(axis=0))
+        col_names = ["chr","start","end"]+[sample.split("/")[-1] for sample in bamFilesList]
+        sequencing_depth_df = pd.read_csv(out_file_for_raw_data_tmp, sep="\t",header=None)
+        sequencing_depth_df.columns = col_names
 
+        if not 'out_file_for_raw_data' in kwargs:
+            os.remove(out_file_for_raw_data_tmp)
 
-
-
-# sequencing_depth = cr.run()
-
-
-
+        return sequencing_depth_df
 
     def as_dataFrame(self):
-        pass
+        return
 
 
 def main():

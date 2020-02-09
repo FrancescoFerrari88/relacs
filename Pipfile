@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 deeptools = "*"
 pyyaml = "*"
+pandas = "*"
 
 [dev-packages]
 
