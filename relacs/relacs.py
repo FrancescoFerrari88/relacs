@@ -24,6 +24,7 @@ import yaml
 import logging
 from deeptools.countReadsPerBin import CountReadsPerBin as crpb
 
+logging.basicConfig(level=logging.INFO)
 
 def process_yaml(config_yml, key_name=None):
     """
@@ -38,7 +39,7 @@ def process_yaml(config_yml, key_name=None):
         else:
             return dict_config
     except Exception as exe:
-        print("Something is wrong with your config file: {}".format(exe))
+        logging.error("Something is wrong with your config file: {}".format(exe))
 
 def get_all_bams(config_dict):
     all_bams = list(set([sample for sample in config_dict.keys()])) + \
@@ -66,47 +67,49 @@ class makeRelacsObject:
             self.base_dir = process_yaml(config_yml,"base_dir")
             self.check_paths()
 
-    def check_paths(self):
-
-        all_bam_files = get_all_bams(self.config_yml)
-
-        if self.snakePipes_config:
-            file_list = [os.path.join(self.base_dir, "filtered_bam/{}.filtered.bam".format(sample)) for sample in all_bam_files]
-        else:
-            file_list = [os.path.join(self.base_dir, "{}.bam".format(sample)) for sample in all_bam_files]
-
-        ### check that bam files are present
-        check_file_path = [os.path.isfile(f_) for f_ in file_list]
-        if all(check_file_path):
-            # make logging info
-            print("all bam files are present")
-        else:
-            print("some files are not present: {}".format([file_list[i] for i, val in enumerate(check_file_path) if not val]))
-
-        ### check that indices are present
-        check_presence_indices = [os.path.isfile("{}.bai".format(f_)) for f_ in file_list]
-        if all(check_file_path):
-            # TODO: substitute print statments with proper logging
-            print("all indexes are present")
-        else:
-            print("some files indexes are not present: {}".format(["{}.bai".format(file_list[i]) for i, val in enumerate(check_file_path) if not val]))
-
-
-
-
-        # make sure paths exist
-
-
-
-
-
-
 
     def __repr__(self):
         return self.experiment_name
 
     def __str__(self):
         return self.experiment_name
+
+    def check_paths(self):
+        """
+        Check if provided paths point to exsisting files. If files are missing, Exception is thrown
+        """
+
+        all_bam_files = get_all_bams(self.config_yml)
+
+        if self.snakePipes_config:
+            file_list = [os.path.join(self.base_dir, "filtered_bam/{}.filtered.bam".format(sample)) \
+                            for sample in all_bam_files]
+        else:
+            file_list = [os.path.join(self.base_dir, "{}.bam".format(sample)) for sample in all_bam_files]
+
+        ### check that bam files are present
+        check_file_path = [os.path.isfile(f_) for f_ in file_list]
+        if all(check_file_path):
+            logging.debug("All bam files are present")
+        else:
+            raise Exception("Some files are not present: {}".format([file_list[i] \
+                    for i, val in enumerate(check_file_path) if not val]))
+
+        ### check that indices are present
+        check_presence_indices = [os.path.isfile("{}.bai".format(f_)) for f_ in file_list]
+        if all(check_presence_indices):
+            logging.debug("All indexes are present")
+        else:
+            raise Exception("Some indexes are not present: {}".format(["{}.bai".format(file_list[i]) \
+                    for i, val in enumerate(check_presence_indices) if not val]))
+
+    def get_coverage(bed_file = None, **kwargs):
+        """
+        Retrieve converage information, using deeptools' CountReadsPerBin.
+        If bed file is provided, retrieve coverage for each regions specified in bed file
+        """
+        pass
+
 
     def as_dataFrame(self):
         pass

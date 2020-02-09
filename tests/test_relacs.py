@@ -1,5 +1,31 @@
 import unittest
+import os
 from relacs import relacs as rl
+
+class testInitRelacs(unittest.TestCase):
+
+    def setUp(self):
+        self.relObj_custom = rl.makeRelacsObject("tests/test_data/chip_seq_sample_config.custom.yaml",
+                                                experiment_name="test_relacs_custom")
+        self.relObj_snakepipes = rl.makeRelacsObject("tests/test_data/chip_seq_sample_config.snakePipes.yaml",
+                                                experiment_name="test_relacs_snakepipes",
+                                                snakePipes_config="tests/test_data/ChIP-seq.config.yaml")
+    def test_get_all_bams(self):
+        self.assertEqual(sorted(rl.get_all_bams(self.relObj_custom.config_yml)),
+                         sorted([".".join(f_.split(".")[:-1]) for f_ in os.listdir("tests/test_data/filtered_bam/") if f_.endswith(".bam")]))
+        self.assertEqual(sorted(rl.get_all_bams(self.relObj_snakepipes.config_yml)),
+                         sorted([".".join(f_.split(".")[:-2]) for f_ in os.listdir("tests/test_data/filtered_bam/") if f_.endswith(".bam")]))
+
+    def test_initAttributes(self):
+        # test experiment_name attribute
+        self.assertEqual(self.relObj_custom.experiment_name, "test_relacs_custom")
+        self.assertEqual(self.relObj_snakepipes.experiment_name, "test_relacs_snakepipes")
+        # test base_dir attribute
+        self.assertEqual(self.relObj_custom.base_dir, "/Users/ferrari/first_python_package/relacs/tests/test_data/filtered_bam")
+        self.assertEqual(self.relObj_snakepipes.base_dir, "/Users/ferrari/first_python_package/relacs/tests/test_data/")
+
+
+
 
 # class testCalc(unittest.TestCase):
 #
