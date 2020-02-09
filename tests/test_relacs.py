@@ -11,10 +11,12 @@ class testInitRelacs(unittest.TestCase):
                                                 experiment_name="test_relacs_snakepipes",
                                                 snakePipes_config="tests/test_data/ChIP-seq.config.yaml")
     def test_get_all_bams(self):
-        self.assertEqual(sorted(rl.get_all_bams(self.relObj_custom.config_yml)),
-                         sorted([".".join(f_.split(".")[:-1]) for f_ in os.listdir("tests/test_data/filtered_bam/") if f_.endswith(".bam")]))
-        self.assertEqual(sorted(rl.get_all_bams(self.relObj_snakepipes.config_yml)),
-                         sorted([".".join(f_.split(".")[:-2]) for f_ in os.listdir("tests/test_data/filtered_bam/") if f_.endswith(".bam")]))
+        self.assertEqual(sorted(rl._get_all_bams(self.relObj_custom.extended_yml)),
+                         sorted([os.path.join(self.relObj_custom.base_dir, f_) \
+                                for f_ in os.listdir("tests/test_data/filtered_bam/") if f_.endswith(".bam")]))
+        self.assertEqual(sorted(rl._get_all_bams(self.relObj_snakepipes.extended_yml)),
+                         sorted([os.path.join(self.relObj_custom.base_dir, f_) \
+                                for f_ in os.listdir("tests/test_data/filtered_bam/") if f_.endswith(".bam")]))
 
     def test_initAttributes(self):
         # test experiment_name attribute
